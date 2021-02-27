@@ -41,14 +41,14 @@ class ConvLSTMCell(nn.Module):
 
     def init_hidden(self, batch_size, hidden, shape):
         if self.Wci is None:
-            self.Wci = Variable(torch.zeros(1, hidden, shape[0], shape[1])).to("cpu")
-            self.Wcf = Variable(torch.zeros(1, hidden, shape[0], shape[1])).to("cpu")
-            self.Wco = Variable(torch.zeros(1, hidden, shape[0], shape[1])).to("cpu")
+            self.Wci = Variable(torch.zeros(1, hidden, shape[0], shape[1])).to("cuda")
+            self.Wcf = Variable(torch.zeros(1, hidden, shape[0], shape[1])).to("cuda")
+            self.Wco = Variable(torch.zeros(1, hidden, shape[0], shape[1])).to("cuda")
         else:
             assert shape[0] == self.Wci.size()[2], 'Input Height Mismatched!'
             assert shape[1] == self.Wci.size()[3], 'Input Width Mismatched!'
-        return (Variable(torch.zeros(batch_size, hidden, shape[0], shape[1])).to("cpu"),
-                Variable(torch.zeros(batch_size, hidden, shape[0], shape[1])).to("cpu"))
+        return (Variable(torch.zeros(batch_size, hidden, shape[0], shape[1])).to("cuda"),
+                Variable(torch.zeros(batch_size, hidden, shape[0], shape[1])).to("cuda"))
 
 
 class ConvLSTM(nn.Module):
@@ -97,11 +97,11 @@ class ConvLSTM(nn.Module):
 if __name__ == '__main__':
     # gradient check
     convlstm = ConvLSTM(input_channels=512, hidden_channels=[128, 64, 64, 32, 32], kernel_size=3, step=5,
-                        effective_step=[4]).to("cpu")
+                        effective_step=[4]).to("cuda")
     loss_fn = torch.nn.MSELoss()
 
-    input = Variable(torch.randn(5, 512, 64, 32)).to("cpu")
-    target = Variable(torch.randn(1, 32, 64, 32)).double().to("cpu")
+    input = Variable(torch.randn(5, 512, 64, 32)).to("cuda")
+    target = Variable(torch.randn(1, 32, 64, 32)).double().to("cuda")
 
     output = convlstm(input)
     output = output[0][0].double()

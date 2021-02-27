@@ -7,7 +7,9 @@ train_data_path = "./data/matrix_data/train_data/"
 test_data_path = "./data/matrix_data/test_data/"
 shuffle = {'train': True, 'test': False}
 
-def load_data():
+def load_data(base_folder="data/"):
+    train_data_path = base_folder+"matrix_data/train_data/"
+    test_data_path = base_folder+"matrix_data/test_data/"
     dataset = {}
     train_file_list = os.listdir(train_data_path)
     test_file_list = os.listdir(test_data_path)
