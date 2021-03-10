@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from conv_lstm import ConvLSTM
+from .conv_lstm import ConvLSTM
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def attention(ConvLstm_out):

@@ -7,9 +7,13 @@ train_data_path = "./data/matrix_data/train_data/"
 test_data_path = "./data/matrix_data/test_data/"
 shuffle = {'train': True, 'test': False}
 
-def load_data(base_folder="data/"):
-    train_data_path = base_folder+"matrix_data/train_data/"
-    test_data_path = base_folder+"matrix_data/test_data/"
+def load_data(base_folder="data/matrix_data/"):
+    train_data_path = base_folder + "train_data/"
+    if not os.path.exists(train_data_path):
+        os.mkdir(train_data_path)
+    test_data_path = base_folder + "test_data/"
+    if not os.path.exists(test_data_path):
+        os.mkdir(test_data_path)
     dataset = {}
     train_file_list = os.listdir(train_data_path)
     test_file_list = os.listdir(test_data_path)
@@ -30,6 +34,8 @@ def load_data(base_folder="data/"):
 
     dataset["train"] = torch.from_numpy(np.array(train_data)).float()
     dataset["test"] = torch.from_numpy(np.array(test_data)).float()
+
+    print('CHECK DIMENSIONS', dataset["train"].shape, dataset["test"].shape)
 
     dataloader = {x: torch.utils.data.DataLoader(
                                 dataset=dataset[x], batch_size=1, shuffle=shuffle[x]) 

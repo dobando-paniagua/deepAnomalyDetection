@@ -14,29 +14,31 @@ import re
 class SignatureMatrix:
 
 	def __init__(self, step_max, win_size, storage_path='data/'):
-		step_max = step_max
-		win_size = win_size
-		min_time = 0
-		max_time = 20000
-		gap_time = 10
+		self.step_max = step_max
+		self.win_size = win_size
+		self.min_time = 0
+		self.max_time = 20000
+		self.gap_time = 10
 		
-		train_start = 0
-		train_end = 8000
-		test_start = 8000
-		test_end = 20000
+		self.train_start = 0
+		self.train_end = 8000
+		self.test_start = 8000
+		self.test_end = 20000
 
-		raw_data_path = 'data/synthetic_data_with_anomaly-s-1.csv'
-		save_data_path = storage_path
+		self.raw_data_path = 'data/synthetic_data_with_anomaly-s-1.csv'
 		ts_colname="agg_time_interval"
 		agg_freq='5min'
 
-		matrix_data_path = save_data_path + "matrix_data/"
-		if not os.path.exists(matrix_data_path):
-			os.makedirs(matrix_data_path)
+		self.matrix_data_path = storage_path + "matrix_data/"
+		if not os.path.exists(self.matrix_data_path):
+			os.makedirs(self.matrix_data_path)
 
 
 	def generate_signature_matrix_node(self):
 		data = np.array(pd.read_csv(self.raw_data_path, header = None), dtype=np.float64)
+		print('____________________________________________')
+		print('MATRIX GENERATION DIMS', data.shape)
+		print('____________________________________________')
 		sensor_n = data.shape[0]
 		# min-max normalization
 		max_value = np.max(data, axis=1)
@@ -69,20 +71,20 @@ class SignatureMatrix:
 	def generate_train_test_data(self):
 		#data sample generation
 		print ("generating train/test data samples...")
-		matrix_data_path = self.save_data_path + "matrix_data/"
 
-		train_data_path = matrix_data_path + "train_data/"
+
+		train_data_path = self.matrix_data_path + "train_data/"
 		if not os.path.exists(train_data_path):
 			os.makedirs(train_data_path)
-		test_data_path = matrix_data_path + "test_data/"
+		test_data_path = self.matrix_data_path + "test_data/"
 		if not os.path.exists(test_data_path):
 			os.makedirs(test_data_path)
 
 		data_all = []
 		# for value_col in value_colnames:
 		for w in range(len(self.win_size)):
-			#path_temp = matrix_data_path + "matrix_win_" + str(win_size[w]) + str(value_col) + ".npy"
-			path_temp = matrix_data_path + "matrix_win_" + str(self.win_size[w]) + ".npy"
+			#path_temp = self.matrix_data_path + "matrix_win_" + str(win_size[w]) + str(value_col) + ".npy"
+			path_temp = self.matrix_data_path + "matrix_win_" + str(self.win_size[w]) + ".npy"
 			data_all.append(np.load(path_temp))
 
 		train_test_time = [[self.train_start, self.train_end], [self.test_start, self.test_end]]
